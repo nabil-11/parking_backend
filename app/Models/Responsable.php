@@ -12,14 +12,17 @@ class Responsable extends Model
 
     protected $hidden = [
 
-        'id','abonnement_id'
+        'id'
     ];
     protected $fillable = [
-        'picture'
+        'picture','abonnement_id'
     ];
     public function abonnement(){
         return $this->hasOne('App\Models\Abonnement','abonnement_id','id');
     }
- 
+    public function parking(){
+        return $this->hasMany('App\Models\Parking','responsable_id','id');
+    }
+
 
 }

@@ -48,24 +48,43 @@ class UserController extends Controller
     }
     public function handleUserLogin(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try {
+            $validateUser = Validator::make($request->all(),
+                [
+                    'email' => 'required|email',
+                    'password' => 'required'
+                ]);
 
-        if ($validator->fails()) {
-            // Validation failed
-            return response()->json(['message' => 'Invalid input'], 422);
-        }
+            if($validateUser->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
 
-        $credentials = $request->only('email', 'password');
+            if(!Auth::attempt($request->only(['email', 'password']))){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Email & Password does not match with our record.',
+                ], 401);
+            }
 
-        if (Auth::attempt($credentials)) {
-            // Authentication passed
-            return response()->json(['message' => 'Login successful']);
-        } else {
-            // Authentication failed
-            return response()->json(['message' => 'Invalid email'], 401);
+            $user = User::where('email', $request->email)->first();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User Logged In Successfully',
+                'token' => $user->createToken("API TOKEN")->plainTextToken ,
+                'user'=> Auth::user()
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
+
 }

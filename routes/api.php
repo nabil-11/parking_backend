@@ -20,7 +20,12 @@ Route::group(['module' => 'User',  'namespace' => '\App\Http\Controllers\User'],
     Route::get('/user/logout', 'UserController@handleLogout')->name('handleLogout');
 
 });
+
 Route::group(['module' => 'User',  'namespace' => '\App\Http\Controllers'], function() {
+    Route::post('/parking', 'responsableController@handleResponsableAddParking')->name('addParking')->middleware('auth:sanctum');
+    Route::get('/parking', 'responsableController@showResponsableParking')->name('showResponsableParking')->middleware('auth:sanctum');
+
+
     Route::get('/type_abonnement', 'responsableController@showTypeAbonnement')->name('showTypeAbonnement');
 
 });

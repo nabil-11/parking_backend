@@ -29,8 +29,14 @@ return new class extends Migration
             $table->foreign('parking_id')->references('id')->on('parkings')->onDelete('cascade');
 
         });
+        Schema::table('parkings', function (Blueprint $table) {
+            $table->foreign('responsable_id')->references('id')->on('responsables')->onDelete('cascade');
+        });
         Schema::table('blocs', function (Blueprint $table) {
             $table->foreign('parking_id')->references('id')->on('parkings')->onDelete('cascade');
+        });
+        Schema::table('parking_places', function (Blueprint $table) {
+            $table->foreign('bloc_id')->references('id')->on('blocs')->onDelete('cascade');
 
         });
         Schema::table('reservations', function (Blueprint $table) {

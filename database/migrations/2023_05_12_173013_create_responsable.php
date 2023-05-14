@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('name') ;
             $table->string('langitude')->nullable() ;
             $table->string('lantitude')->nullable() ;
+            $table->unsignedBigInteger('responsable_id') ;
             $table->text('description') ;
             $table->timestamps();
         });
@@ -50,7 +51,6 @@ return new class extends Migration
         });
         Schema::create('parking_places', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('parking_id') ;
             $table->unsignedBigInteger('bloc_id') ;
             $table->integer('status')->default(0) ;
             $table->timestamps();
