@@ -12,13 +12,13 @@ class Abonnement extends Model
 
     protected $hidden = [
 
-        'id','type_abonnement_id'
+        'id'
     ];
-    protected $fillable = [
-        'date_expire'
+    public $fillable = [
+        'date_expire' , 'type_abonnement_id'
     ];
     public function responsable(){
-        return $this->belongsTo('App\Models\Responsable','abonnement_id','id');
+        return $this->hasOne(Responsable::class,'abonnement_id','id');
     }
     public function type_abonnement(){
         return $this->hasOne('App\Models\AbonnementType','type_abonnement_id','id');

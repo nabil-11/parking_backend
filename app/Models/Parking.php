@@ -12,10 +12,10 @@ class Parking extends Model
 
     protected $hidden = [
 
-        'id',
+
     ];
     protected $fillable = [
-        'name','description','responsable_id','langitude','lantitude'
+        'id', 'name','description','responsable_id','langitude','lantitude' ,'place_parking_id'
     ];
 
     public function blocs(){

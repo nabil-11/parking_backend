@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Abonnement;
+use App\Models\AbonnementType;
+use App\Models\client;
+use App\Models\Responsable;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +33,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
+      $client = Client::create();
 
         // Create a new user using the validated data
         $user = User::create([
@@ -38,7 +44,9 @@ class UserController extends Controller
             'picture' => $request->input('picture'),
             'role_id'=> 1 ,
             'phone' => $request->input('phone'),
+            'client_id'=>$client->id
         ]);
+
 
         // Optionally, you can perform additional actions like sending a welcome email or generating an authentication token
 
@@ -70,13 +78,18 @@ class UserController extends Controller
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+                ->with(['responsable' => function ($query) {
+                    $query->with('abonnement');
+                }])
+                ->first();
+
 
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken ,
-                'user'=> Auth::user()
+                'user'=> $user
             ], 200);
 
         } catch (\Throwable $th) {
@@ -85,6 +98,45 @@ class UserController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function handleUserAddPayment(Request $request){
+   $data = $request->all() ;
+    $user = Auth::user() ;
+     if(isset($user->responsable_id)){
+         $responsable = Responsable::find($user->responsable_id);
+         $ab = Abonnement::find($responsable->abonnement_id);
+         if($data['type']==2){
+             $ab->date_expire =  Carbon::parse($ab->date_expire)->addYear();
+         }else{
+             $ab->date_expire =  Carbon::parse($ab->date_expire)->addMonth();
+         }
+         $ab->save();
+         return response()->json(['status'=>true , $ab] ,200);
+
+
+     }else{
+
+           $now = Carbon::now();
+         if($data['type']==1){
+             $date_exp =$now->addMonth() ;
+         }
+         if($data['type']==2){
+             $date_exp =$now->addYear() ;
+         }
+            $ab = Abonnement::create([
+                'type_abonnement_id'=>$data['type'],
+                'date_expire'=>$date_exp
+            ]) ;
+         $resp =  Responsable::create([
+             'abonnement_id'=>$ab->id
+         ]);
+         $user->responsable_id = $resp->id;
+
+ return response()->json([$resp,$ab] ,201);
+     }
+
+
     }
 
 }

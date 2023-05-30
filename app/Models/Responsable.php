@@ -15,13 +15,17 @@ class Responsable extends Model
         'id'
     ];
     protected $fillable = [
-        'picture','abonnement_id'
+        'abonnement_id'
     ];
     public function abonnement(){
-        return $this->hasOne('App\Models\Abonnement','abonnement_id','id');
+        return $this->belongsTo(Abonnement::class, 'abonnement_id');
     }
     public function parking(){
         return $this->hasMany('App\Models\Parking','responsable_id','id');
+    }
+    public function user(){
+        return $this->hasOne(User::class,'responsable_id','id');
+
     }
 
 

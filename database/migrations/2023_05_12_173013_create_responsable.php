@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('responsables', function (Blueprint $table) {
             $table->id();
-            $table->string('picture')->nullable();
             $table->unsignedBigInteger('abonnement_id') ;
+            $table->timestamps();
+        });
+        Schema::create('clients', function (Blueprint $table) {
+            $table->id();
+            $table->integer('status')->default(1) ;
             $table->timestamps();
         });
         Schema::create('abonnements', function (Blueprint $table) {
@@ -72,10 +76,7 @@ return new class extends Migration
             $table->unsignedBigInteger('place_parking_id') ;
             $table->timestamps();
         });
-        Schema::create('clients', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+
     }
 
     /**

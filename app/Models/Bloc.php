@@ -12,10 +12,9 @@ class Bloc extends Model
 
     protected $hidden = [
 
-        'id',
     ];
     protected $fillable = [
-        'hour_price','type','parking_id'
+       'id', 'hour_price','type','parking_id'
     ];
 
     public function blocPlaces(){

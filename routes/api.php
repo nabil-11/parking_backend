@@ -19,11 +19,17 @@ Route::group(['module' => 'User',  'namespace' => '\App\Http\Controllers\User'],
     Route::post('/user/login', 'UserController@handleUserLogin')->name('handleUserLogin');
     Route::get('/user/logout', 'UserController@handleLogout')->name('handleLogout');
 
+    //*abonments
+    Route::post('/payment/add', 'UserController@handleUserAddPayment')->name('handleUserAddPayment')->middleware('auth:sanctum');
+
 });
 
 Route::group(['module' => 'User',  'namespace' => '\App\Http\Controllers'], function() {
     Route::post('/parking', 'responsableController@handleResponsableAddParking')->name('addParking')->middleware('auth:sanctum');
     Route::get('/parking', 'responsableController@showResponsableParking')->name('showResponsableParking')->middleware('auth:sanctum');
+    Route::get('/parking/all', 'responsableController@showAllParking')->name('showAllParking');
+    Route::post('/parking/reserve' , 'responsableController@handleReservation')->name('handleReservation')->middleware('auth:sanctum') ;
+    Route::get('/list_reservation' , 'responsableController@listReservation')->name('listReservation')->middleware('auth:sanctum') ;
 
 
     Route::get('/type_abonnement', 'responsableController@showTypeAbonnement')->name('showTypeAbonnement');

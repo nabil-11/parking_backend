@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Abonnement;
+use App\Models\AbonnementType;
+
 use App\Models\Responsable;
 use App\Models\UserModels\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,7 +21,8 @@ class UserSeeder extends Seeder
         Role::create(['title' => 'Administrator']);
         Role::create(['title' => 'responsable']);
         Role::create(['title' => 'employeur']);
+        Abonnement::create(['type_abonnement_id'=>1 ]); 
         Responsable::create(['abonnement_id'=>1]) ;
-        Abonnement::create(['type_abonnement_id'=>1 ]);
+
     }
 }

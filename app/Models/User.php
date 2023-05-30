@@ -28,7 +28,10 @@ class User extends Authenticatable
         'status' ,
         'phone',
         'picture',
-        'password',
+        'password' ,
+        'responsable_id',
+        'client_id',
+        'employeur_id'
 
     ];
 
@@ -53,5 +56,9 @@ class User extends Authenticatable
     public function  role()
     {
         return $this->belongsTo( Role::class , 'user_role' , 'id');
+    }
+    public function  responsable()
+    {
+        return $this->belongsTo( Responsable::class , 'responsable_id' , 'id');
     }
 }
